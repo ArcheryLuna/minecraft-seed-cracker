@@ -1,0 +1,283 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Block-game theme: dark dirt background, bevelled stone panels and buttons,
+ * grass-green primary, redstone red, gold and emerald accents, square corners
+ * and a pixel font. Textures in public/textures come from scripts/make-textures.py.
+ * The site is dark only, so :root and .dark share the same values.
+ */
+:root,
+.dark {
+  --background: #1c1915;
+  --foreground: #f2efe9;
+  --card: #34312d;
+  --card-foreground: #f2efe9;
+  --popover: #2b2825;
+  --popover-foreground: #f2efe9;
+  --primary: #5d9e35;
+  --primary-foreground: #ffffff;
+  --secondary: #5b5856;
+  --secondary-foreground: #ffffff;
+  --muted: #26231f;
+  --muted-foreground: #b4ada3;
+  --accent: #45423e;
+  --accent-foreground: #ffffff;
+  --destructive: #e0453c;
+  --border: #0e0d0b;
+  --input: #8b8782;
+  --ring: #f4d35e;
+  --success: #49d97a;
+  --warning: #f2b233;
+  --diamond: #5fd9d0;
+  --chart-1: #5d9e35;
+  --chart-2: #5fd9d0;
+  --chart-3: #49d97a;
+  --chart-4: #f2b233;
+  --chart-5: #e0453c;
+  --radius: 0rem;
+  --sidebar: #26231f;
+  --sidebar-foreground: #f2efe9;
+  --sidebar-primary: #5d9e35;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #45423e;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #0e0d0b;
+  --sidebar-ring: #f4d35e;
+
+  /* Bevels: light top-left edge, dark bottom-right edge. */
+  --bevel: inset 2px 2px 0 rgba(255, 255, 255, 0.16), inset -2px -2px 0 rgba(0, 0, 0, 0.4);
+  --bevel-pressed: inset 2px 2px 0 rgba(0, 0, 0, 0.4), inset -2px -2px 0 rgba(255, 255, 255, 0.1);
+  --drop: 0 4px 0 rgba(0, 0, 0, 0.45);
+}
+
+@theme inline {
+  /* --font-digits only covers 0-9 (see layout.tsx), so numbers use a readable font. */
+  --font-sans: var(--font-digits), var(--font-minecraft), var(--font-pixel), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-digits), var(--font-minecraft), var(--font-pixel), var(--font-inter), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-diamond: var(--diamond);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    color-scheme: dark;
+    /* The pixel font reads better a little larger; everything sized in rem scales with it. */
+    font-size: 17px;
+  }
+  body {
+    @apply text-foreground;
+    background-color: var(--background);
+    /* Darkened dirt, like a game menu backdrop. */
+    background-image: linear-gradient(rgba(16, 13, 10, 0.78), rgba(16, 13, 10, 0.78)), url("/textures/dirt.png");
+    background-size: auto, 64px 64px;
+    image-rendering: pixelated;
+  }
+  /* Keep the pixel scaling for textures only, not for text or icons. */
+  body * {
+    image-rendering: auto;
+  }
+}
+
+/* White text with a hard drop shadow, for headings and buttons. */
+.pixel-shadow {
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* ---------------------------------------------------------------- panels */
+
+[data-slot="card"],
+[data-slot="alert"],
+[data-slot="select-content"] {
+  border: 2px solid var(--border);
+  box-shadow: var(--bevel), var(--drop);
+}
+[data-slot="card-title"] {
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
+}
+[data-slot="alert"][data-variant="destructive"] {
+  background: #3a1f1c;
+}
+[data-slot="select-item"][data-highlighted] {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* ---------------------------------------------------------------- buttons */
+
+[data-slot="button"] {
+  border: 2px solid var(--border);
+  box-shadow: var(--bevel);
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.55);
+  letter-spacing: 0.02em;
+}
+[data-slot="button"]:active:not(:disabled) {
+  box-shadow: var(--bevel-pressed);
+}
+[data-slot="button"][data-variant="default"] {
+  background: var(--primary);
+  color: #fff;
+}
+[data-slot="button"][data-variant="default"]:hover:not(:disabled) {
+  background: #6db53f;
+}
+[data-slot="button"][data-variant="outline"],
+[data-slot="button"][data-variant="secondary"] {
+  background: var(--secondary);
+  color: #fff;
+}
+[data-slot="button"][data-variant="outline"]:hover:not(:disabled),
+[data-slot="button"][data-variant="secondary"]:hover:not(:disabled) {
+  background: #6e6b8a;
+}
+[data-slot="button"][data-variant="destructive"] {
+  background: #a8302a;
+  color: #fff;
+}
+[data-slot="button"][data-variant="destructive"]:hover:not(:disabled) {
+  background: var(--destructive);
+}
+/* Ghost buttons stay flat until hovered. */
+[data-slot="button"][data-variant="ghost"] {
+  border-color: transparent;
+  box-shadow: none;
+}
+[data-slot="button"][data-variant="ghost"]:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--border);
+  box-shadow: var(--bevel);
+}
+[data-slot="button"]:disabled {
+  background: #3a3835;
+  color: #8a857e;
+  opacity: 1;
+}
+
+/* Block / chunk toggle: buttons that stay pressed in. */
+[data-slot="toggle-group-item"] {
+  border: 2px solid var(--border);
+  background: var(--secondary);
+  color: #e8e4de;
+  box-shadow: var(--bevel);
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.55);
+}
+[data-slot="toggle-group-item"][aria-pressed="true"] {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: var(--bevel-pressed);
+}
+
+/* ---------------------------------------------------------------- fields */
+
+/* Black text fields with a light frame, like an in-game text box. */
+[data-slot="input"],
+[data-slot="textarea"],
+[data-slot="select-trigger"] {
+  background: #0d0c0b;
+  border: 2px solid var(--input);
+  color: #fff;
+}
+[data-slot="input"]:focus,
+[data-slot="textarea"]:focus,
+[data-slot="select-trigger"]:focus-visible,
+[data-slot="select-trigger"][data-popup-open] {
+  border-color: #fff;
+  box-shadow: none;
+}
+[data-slot="input"][aria-invalid="true"] {
+  border-color: var(--destructive);
+}
+
+/* Square switch. */
+[data-slot="switch"],
+[data-slot="switch-thumb"] {
+  border-radius: 0;
+}
+[data-slot="switch"] {
+  border: 2px solid var(--border);
+}
+[data-slot="switch-thumb"] {
+  box-shadow: var(--bevel);
+}
+
+/* Badges: small square tags. */
+[data-slot="badge"] {
+  border-radius: 0;
+}
+
+/* ---------------------------------------------------------------- progress */
+
+/* Experience-bar style: framed black track, segmented green fill. */
+[data-slot="progress-track"] {
+  /* shadcn sets overflow-x: hidden, which makes the y axis scroll; hide both. */
+  overflow: hidden;
+  height: 12px;
+  border-radius: 0;
+  background: #0d0c0b;
+  border: 2px solid var(--border);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+[data-slot="progress-indicator"] {
+  background-color: #7fd63a;
+  background-image: repeating-linear-gradient(90deg, transparent 0 10px, rgba(0, 0, 0, 0.35) 10px 12px);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.25), inset 0 -2px 0 rgba(0, 0, 0, 0.25);
+}
+.progress-stripes [data-slot="progress-indicator"] {
+  animation: xp-glow 1.2s ease-in-out infinite alternate;
+}
+@keyframes xp-glow {
+  to {
+    background-color: #a4ec5c;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .progress-stripes [data-slot="progress-indicator"] {
+    animation: none;
+  }
+}

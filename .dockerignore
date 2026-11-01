@@ -1,0 +1,44 @@
+# Keep the build context small and free of local state. The image is built
+# from source with a clean `npm ci`, so local installs and builds stay out.
+
+# dependencies and builds
+node_modules
+.next
+out
+build
+dist
+*.tsbuildinfo
+next-env.d.ts
+
+# version control and editors
+.git
+.gitignore
+.idea
+.vscode
+*.swp
+.DS_Store
+
+# tests and tooling output
+coverage
+test-results
+playwright-report
+blob-report
+__pycache__
+*.py[cod]
+.venv
+venv
+*.log
+
+# secrets
+.env*
+*.pem
+*.key
+
+# AI tool settings
+.claude
+CLAUDE.local.md
+
+# Docker files themselves
+Dockerfile
+.dockerignore
+docker-compose.yml

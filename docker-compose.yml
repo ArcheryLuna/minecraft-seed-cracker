@@ -1,0 +1,22 @@
+# Run Seed Cracker with Docker Compose:
+#
+#   docker compose up -d --build      # http://localhost:3000
+#
+# Set PORT to publish on another host port, e.g. PORT=8080 docker compose up -d
+
+services:
+  seed-cracker:
+    build: .
+    image: seed-cracker:latest
+    ports:
+      - "${PORT:-3000}:3000"
+    restart: unless-stopped
+    # The server only reads files; Next.js may write its cache, so give it a tmpfs.
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/.next/cache:uid=1000,gid=1000
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
